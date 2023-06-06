@@ -12,7 +12,7 @@ export class BaggageController {
     @UseInterceptors(ErrorInterceptor)
     @Get(':id/status')
     async getBaggageStatus(@Param('id') id: number) {
-        const baggageStatus = await this.baggageService.getBaggage(id);
+        const baggageStatus = await this.baggageService.getBaggageStatus(id);
         return { status: baggageStatus };
     }
 

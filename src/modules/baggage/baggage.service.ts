@@ -19,8 +19,11 @@ export class BaggageService {
         return this.baggageRepository.save(newBaggage);
     }
 
-    async getBaggage(id: number): Promise<BaggageStatus> {
+    async getBaggageStatus(id: number): Promise<BaggageStatus> {
         const baggage = await this.baggageRepository.findOne(DatabaseHelper.getDbQuery({ id, _show: ['status'] }));
+        if (!baggage) {
+            throw new NotFoundException('Baggage not found');
+        }
         return baggage.status;
     }
 
