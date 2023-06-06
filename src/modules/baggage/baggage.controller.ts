@@ -1,8 +1,9 @@
-import { Controller, Post, Body, ValidationPipe, UseInterceptors, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, UseInterceptors, Get, Param, Patch } from '@nestjs/common';
 import { BaggageService } from './baggage.service';
 import { Baggage } from './baggage.entity';
-import { CreateBaggageDto } from './dto/create_baggage.dto';
+import { CreateBaggageDto } from './dto/CreateBaggage.dto';
 import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
+import { UpdateBaggageDto } from './dto/UpdateBaggage.dto';
 
 @Controller('baggage')
 export class BaggageController {
@@ -26,6 +27,16 @@ export class BaggageController {
     @Post()
     async createBaggage(@Body(new ValidationPipe()) createBaggageDto: CreateBaggageDto): Promise<Baggage> {
         const newBaggage = await this.baggageService.createBaggage(createBaggageDto);
+        return newBaggage;
+    }
+
+    @UseInterceptors(ErrorInterceptor)
+    @Patch(':id/status')
+    async updateBaggage(
+        @Param('id') id: number,
+        @Body(new ValidationPipe()) updateBaggageDto: UpdateBaggageDto,
+    ): Promise<Baggage> {
+        const newBaggage = await this.baggageService.updateBaggageStatus(id, updateBaggageDto);
         return newBaggage;
     }
 }
