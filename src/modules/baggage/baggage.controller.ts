@@ -39,4 +39,11 @@ export class BaggageController {
         const newBaggage = await this.baggageService.updateBaggageStatus(id, updateBaggageDto);
         return newBaggage;
     }
+
+    @UseInterceptors(ErrorInterceptor)
+    @Get('delivered-ratio')
+    async getDeliveryRatio(): Promise<{ deliveredRatio: string }> {
+        const deliveredRatio = await this.baggageService.getDeliveredRatio();
+        return { deliveredRatio };
+    }
 }

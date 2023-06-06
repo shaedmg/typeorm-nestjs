@@ -47,4 +47,16 @@ export class BaggageService {
         const updatedBaggage = await this.baggageRepository.findOne(DatabaseHelper.getDbQuery({ id }));
         return updatedBaggage;
     }
+
+    async getDeliveredRatio(): Promise<string> {
+        const totalBaggages = await this.baggageRepository.count();
+        if (totalBaggages === 0) {
+            return '0';
+        }
+        const deliveredBaggages = await this.baggageRepository.count(
+            DatabaseHelper.getDbQuery({ status: BaggageStatus.DELIVERED }),
+        );
+        const deliveredRatio = `${deliveredBaggages}/${totalBaggages}`;
+        return deliveredRatio;
+    }
 }
