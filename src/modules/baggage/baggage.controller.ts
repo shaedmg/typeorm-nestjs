@@ -16,6 +16,13 @@ export class BaggageController {
     }
 
     @UseInterceptors(ErrorInterceptor)
+    @Get(':id/origin-destination')
+    async getBaggageOriginAndDestination(@Param('id') id: number) {
+        const baggageOriginAndDestination = await this.baggageService.getOriginAndDestination(id);
+        return baggageOriginAndDestination;
+    }
+
+    @UseInterceptors(ErrorInterceptor)
     @Post()
     async createBaggage(@Body(new ValidationPipe()) createBaggageDto: CreateBaggageDto): Promise<Baggage> {
         const newBaggage = await this.baggageService.createBaggage(createBaggageDto);
