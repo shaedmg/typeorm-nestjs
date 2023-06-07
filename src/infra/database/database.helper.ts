@@ -1,6 +1,7 @@
 const QUERY_OPTIONS = {
     select: ['_show'],
     order: ['_order', '_sort'],
+    relation: ['_embed'],
 };
 
 const DEFAULT_ORDER = 'ASC';
@@ -34,10 +35,21 @@ export class DatabaseHelper {
         return { order: orderQuery };
     }
 
+    static getDbRelations(query: Record<string, any>): { relations: string[] } {
+        const relationsQuery = [];
+        QUERY_OPTIONS.relation.forEach(option => {
+            if (query[option]) {
+                relationsQuery.push(...query[option]);
+            }
+        });
+        return { relations: relationsQuery };
+    }
+
     static getDbQuery(query: Record<string, any>): any {
         const filterQuery = this.getFilterQuery(query);
         const selectQuery = this.getDbSelect(query);
         const orderQuery = this.getDbOrder(query);
-        return { ...filterQuery, ...selectQuery, ...orderQuery };
+        const relationsQuery = this.getDbRelations(query);
+        return { ...filterQuery, ...selectQuery, ...orderQuery, ...relationsQuery };
     }
 }

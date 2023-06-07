@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, JoinTable, ManyToMany } from 'typeorm';
 import { BaggageStatus } from './baggage.enum';
 import { IsEnum, IsNumber, IsString, isString, validateSync } from 'class-validator';
+import { Flight } from '../flight/flight.entity';
 
 @Entity()
 export class Baggage {
@@ -26,6 +27,11 @@ export class Baggage {
     })
     @IsEnum(BaggageStatus)
     status: BaggageStatus = BaggageStatus.PENDING;
+
+    @Column()
+    @ManyToMany(() => Flight, flight => flight.baggages)
+    @JoinTable()
+    flights: Flight[];
 
     @BeforeInsert()
     @BeforeUpdate()
